@@ -1,148 +1,211 @@
+/* Muhamad Irvandi
+	Dataset:	Retail Sales
+
+	=========================
+	Exploratory Data Analysis
+	=========================
+
+	Dimension Exploration:
+	1.	Explore all category
+	
+	Date Exploration:
+	1.	Find first and last order
+	2.	Find youngest and oldest customer
+	
+	Measure Exploration:
+	1.	Find total customer
+	2.	Find total sales
+	3.	Find total order
+	4.	Find total number of products sold
+	5.	Find total revenue generated for each customer
+	6.	Find total revenue generated for each category
+	7.	Find total sales and gender distribution for each category
+	8.	Find the average age for gender in each category
+	9.	Find customer who make repeat order (for all category)
+
+*/
+
 SELECT * FROM retail_sales;
 
--- menghitung total customer 
+/* ===== Dimension Exploration ===== */
+-- Explore All Category
+SELECT
+	DISTINCT(category) AS category
+FROM retail_sales;
+
+
+/* ===== Date Exploration ===== */
+-- Find the date of the first and last order, How many years of sales are available
+SELECT
+	MIN(sale_date) AS first_order,
+	MAX(sale_date) AS last_order,
+	CONCAT(TIMESTAMPDIFF(YEAR, MIN(sale_date), MAX(sale_date)), " Year ", TIMESTAMPDIFF(MONTH, MIN(sale_date), MAX(sale_date)), " Month") AS order_range
+FROM retail_sales;
+
+-- Find the youngest and the oldest customer for each gender 
+SELECT
+	MIN(age) AS youngest_customer,
+	MAX(age) AS oldest_customer
+FROM retail_sales;
+
+
+/* ===== Measure Exploration ===== */
+-- Find total customer
 SELECT
 	COUNT(DISTINCT(customer_id)) AS total_customer
 FROM retail_sales;
 
--- melihat jumlah kategori
+-- Find total sales
 SELECT
-	DISTINCT(category)
+	SUM(total_sale) AS total_revenue
 FROM retail_sales;
 
--- menghitung jumlah penjualan keseluruhan
-SELECT
-	SUM(total_sale) AS total_penjualan
+-- Find total order
+SELECT 
+	COUNT(transactions_id) AS total_order
 FROM retail_sales;
 
--- menghitung total penjualan dari setiap customer
+-- Find total number of products sold
+SELECT
+	SUM(quantiy) AS product_sold
+FROM retail_sales;
+
+-- Find total revenue generated for each customer
 SELECT 
 	customer_id,
-	SUM(total_sale) AS total_penjualan
+	SUM(total_sale) AS total_revenue
 FROM retail_sales
 GROUP BY customer_id
 ORDER BY customer_id;
 
--- menghitung total penjualan berdasarkan kategori
+-- Find total revenue generated for each category
 SELECT
 	category,
-	SUM(total_sale) AS total_penjualan
+	SUM(total_sale) AS total_revenue
 FROM retail_sales
 GROUP BY category
 ORDER BY category;
 
--- menghitung total penjualan dan distribusi gender untuk masing masng kategori
--- total (seluruh kategori)
+-- Find total sales and gender distribution for each category
+-- for All category
 SELECT
 	gender,
-	COUNT(gender) AS jumlah,
-	SUM(total_sale) AS total_penjualan
+	COUNT(gender) AS total_customer_gender,
+	SUM(total_sale) AS total_revenue
 FROM retail_sales
 GROUP BY gender;
 
--- Beauty
+-- for Beauty
 SELECT
 	gender,
-	COUNT(gender) AS jumlah,
-	SUM(total_sale) AS total_penjualan
-FROM retail_sales
-WHERE category = "Beauty"
-GROUP BY gender;
-
--- Clothing
-SELECT
-	gender,
-	COUNT(gender) AS jumlah,
-	SUM(total_sale) AS total_penjualan
-FROM retail_sales
-WHERE category = "Clothing"
-GROUP BY gender;
-
--- Electronics
-SELECT
-	gender,
-	COUNT(gender) AS jumlah,
-	SUM(total_sale) AS total_penjualan
-FROM retail_sales
-WHERE category = "Electronics"
-GROUP BY gender;
-
-
--- menghitung umur rata-rata pada tiap gender untuk masing-masing kategori
--- total (seluruh kategori)
-SELECT
-	gender,
-	ROUND(AVG(age)) AS umur
-FROM retail_sales
-GROUP BY gender;
-
--- beauty
-SELECT
-	gender,
-	ROUND(AVG(age)) AS umur
+	COUNT(gender) AS total_customer_gender,
+	SUM(total_sale) AS total_revenue
 FROM retail_sales
 WHERE category = "Beauty"
 GROUP BY gender;
 
--- clothing
+-- for Clothing
 SELECT
 	gender,
-	ROUND(AVG(age)) AS umur
+	COUNT(gender) AS total_customer_gender,
+	SUM(total_sale) AS total_revenue
 FROM retail_sales
 WHERE category = "Clothing"
 GROUP BY gender;
 
--- electronics
+-- for Electronics
 SELECT
 	gender,
-	ROUND(AVG(age)) AS umur
+	COUNT(gender) AS total_customer_gender,
+	SUM(total_sale) AS total_revenue	
 FROM retail_sales
 WHERE category = "Electronics"
 GROUP BY gender;
 
--- customer yang melakukan pembelian berulang (semua kategori) dalam sehari/seminggu/sebulan/setahun lengkap dengan tanggal nya
--- dalam sehari (pembelian > 2)
+-- Find the average age for gender in each category
+-- for All category
+SELECT
+	gender,
+	ROUND(AVG(age)) AS age
+FROM retail_sales
+GROUP BY gender;
+
+-- for Beauty
+SELECT
+	gender,
+	ROUND(AVG(age)) AS age
+FROM retail_sales
+WHERE category = "Beauty"
+GROUP BY gender;
+
+-- for Clothing
+SELECT
+	gender,
+	ROUND(AVG(age)) AS age
+FROM retail_sales
+WHERE category = "Clothing"
+GROUP BY gender;
+
+-- for Electronics
+SELECT
+	gender,
+	ROUND(AVG(age)) AS age
+FROM retail_sales
+WHERE category = "Electronics"
+GROUP BY gender;
+
+-- Find customer who make repeat order (for all category)
+-- in a Day (order > 2)
 SELECT 
 	customer_id, 
-	sale_date AS hari 
+	sale_date AS day 
 FROM retail_sales 
-GROUP BY customer_id, hari 
+GROUP BY customer_id, day 
 HAVING COUNT(*) > 2 
-ORDER BY customer_id, hari ;
+ORDER BY customer_id, day ;
 
--- dalam seminggu (pembelian > 3)
+-- in a Week (order > 3)
 SELECT
 	customer_id,
-	CONCAT("Minggu ke-",WEEK(sale_date), " Tahun ", YEAR(sale_date)) AS waktu
+	CONCAT("Week-",WEEK(sale_date), " of ", YEAR(sale_date)) AS order_date
 FROM retail_sales
-GROUP BY customer_id, waktu
+GROUP BY customer_id, order_date
 HAVING COUNT(*) > 3
 ORDER BY customer_id;
 
--- dalam sebulan (pembelian > 7) 
+-- in a Month (order > 7) 
 SELECT
 	customer_id,
-	DATE_FORMAT(sale_date,"%Y-%m") AS waktu
+	DATE_FORMAT(sale_date,"%Y-%m") AS order_date
 FROM retail_sales
-GROUP BY customer_id, waktu
+GROUP BY customer_id, order_date
 HAVING COUNT(customer_id) > 7
-ORDER BY customer_id, waktu;
+ORDER BY customer_id, order_date;
 
--- dalam setahun (pembelian > 70)
+-- in a Year (order > 70)
 SELECT
 	customer_id,
-	DATE_FORMAT(sale_date, "%Y") AS waktu
+	DATE_FORMAT(sale_date, "%Y") AS order_date
 FROM retail_sales
-GROUP BY customer_id, waktu
+GROUP BY customer_id, order_date
 HAVING COUNT(customer_id) > 70
-ORDER BY customer_id, waktu;
+ORDER BY customer_id, order_date;
+
+/* ===== Generate Report that shows all key metrics of business ===== */
+SELECT "Total Sales" AS measure_name, SUM(total_sale) AS measure_value FROM retail_sales
+UNION ALL
+SELECT "Total Customer" AS measure_name, COUNT(DISTINCT(customer_id)) AS measure_value FROM retail_sales
+UNION ALL
+SELECT "Total Category" AS measure_name, COUNT(DISTINCT(category)) AS measure_value FROM retail_sales
+UNION ALL
+SELECT "Total Nr. Product Sold" AS measure_name, SUM(quantiy) AS measure_value FROM retail_sales
+UNION ALL
+SELECT "Total Nr. Order" AS measure_name,	COUNT(transactions_id) AS measure_value FROM retail_sales;
 
 
--- total pembelian seorang customer (contoh customer 20) untuk tiap kategori
-SELECT 
-	category,
-	SUM(total_sale) AS total_pembelian
-FROM retail_sales
-WHERE customer_id = 20
-GROUP BY category   
+
+
+
+
+
 
