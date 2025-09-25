@@ -84,9 +84,9 @@ Customers are scored and classified into segments such as:
 
 ## 📌 How to Use
 1. Import the CSV dataset into your SQL database.  
-2. Run the queries in `EDA.sql` for exploratory analysis.  
-3. Run the queries in `ADA.sql` for advanced analysis. 
-4. Full queries available in [EDA.sql](./scripts/EDA.sql) and [ADA.sql](./scripts/ADA.sql).
+2. Full queries available in [EDA.sql](./scripts/EDA.sql) and [ADA.sql](./scripts/ADA.sql).
+3. Run the queries in `EDA.sql` for exploratory analysis.  
+4. Run the queries in `ADA.sql` for advanced analysis. 
  
 
 ---
