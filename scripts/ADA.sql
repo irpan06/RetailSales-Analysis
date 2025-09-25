@@ -1,5 +1,5 @@
 /* Muhamad Irvandi
-	Dataset:	Retail Sales
+	Dataset: Retail Sales
 
 	======================
 	Advanced Data Analysis
