@@ -25,13 +25,13 @@
 
 */
 
-SELECT * FROM retail_sales;
+SELECT * FROM saless;
 
 /* ===== Dimension Exploration ===== */
 -- Explore All Category
 SELECT
 	DISTINCT(category) AS category
-FROM retail_sales;
+FROM saless;
 
 
 /* ===== Date Exploration ===== */
@@ -40,41 +40,41 @@ SELECT
 	MIN(sale_date) AS first_order,
 	MAX(sale_date) AS last_order,
 	CONCAT(TIMESTAMPDIFF(YEAR, MIN(sale_date), MAX(sale_date)), " Year ", TIMESTAMPDIFF(MONTH, MIN(sale_date), MAX(sale_date)), " Month") AS order_range
-FROM retail_sales;
+FROM saless;
 
 -- Find the youngest and the oldest customer for each gender 
 SELECT
 	MIN(age) AS youngest_customer,
 	MAX(age) AS oldest_customer
-FROM retail_sales;
+FROM saless;
 
 
 /* ===== Measure Exploration ===== */
 -- Find total customer
 SELECT
 	COUNT(DISTINCT(customer_id)) AS total_customer
-FROM retail_sales;
+FROM saless;
 
 -- Find total sales
 SELECT
 	SUM(total_sale) AS total_revenue
-FROM retail_sales;
+FROM saless;
 
 -- Find total order
 SELECT 
 	COUNT(transactions_id) AS total_order
-FROM retail_sales;
+FROM saless;
 
 -- Find total number of products sold
 SELECT
-	SUM(quantiy) AS product_sold
-FROM retail_sales;
+	SUM(quantity) AS product_sold
+FROM saless;
 
 -- Find total revenue generated for each customer
 SELECT 
 	customer_id,
 	SUM(total_sale) AS total_revenue
-FROM retail_sales
+FROM saless
 GROUP BY customer_id
 ORDER BY customer_id;
 
@@ -82,7 +82,7 @@ ORDER BY customer_id;
 SELECT
 	category,
 	SUM(total_sale) AS total_revenue
-FROM retail_sales
+FROM saless
 GROUP BY category
 ORDER BY category;
 
@@ -92,7 +92,7 @@ SELECT
 	gender,
 	COUNT(gender) AS total_customer_gender,
 	SUM(total_sale) AS total_revenue
-FROM retail_sales
+FROM saless
 GROUP BY gender;
 
 -- for Beauty
@@ -100,7 +100,7 @@ SELECT
 	gender,
 	COUNT(gender) AS total_customer_gender,
 	SUM(total_sale) AS total_revenue
-FROM retail_sales
+FROM saless
 WHERE category = "Beauty"
 GROUP BY gender;
 
@@ -109,7 +109,7 @@ SELECT
 	gender,
 	COUNT(gender) AS total_customer_gender,
 	SUM(total_sale) AS total_revenue
-FROM retail_sales
+FROM saless
 WHERE category = "Clothing"
 GROUP BY gender;
 
@@ -118,7 +118,7 @@ SELECT
 	gender,
 	COUNT(gender) AS total_customer_gender,
 	SUM(total_sale) AS total_revenue	
-FROM retail_sales
+FROM saless
 WHERE category = "Electronics"
 GROUP BY gender;
 
@@ -127,14 +127,14 @@ GROUP BY gender;
 SELECT
 	gender,
 	ROUND(AVG(age)) AS age
-FROM retail_sales
+FROM saless
 GROUP BY gender;
 
 -- for Beauty
 SELECT
 	gender,
 	ROUND(AVG(age)) AS age
-FROM retail_sales
+FROM saless
 WHERE category = "Beauty"
 GROUP BY gender;
 
@@ -142,7 +142,7 @@ GROUP BY gender;
 SELECT
 	gender,
 	ROUND(AVG(age)) AS age
-FROM retail_sales
+FROM saless
 WHERE category = "Clothing"
 GROUP BY gender;
 
@@ -150,7 +150,7 @@ GROUP BY gender;
 SELECT
 	gender,
 	ROUND(AVG(age)) AS age
-FROM retail_sales
+FROM saless
 WHERE category = "Electronics"
 GROUP BY gender;
 
@@ -159,7 +159,7 @@ GROUP BY gender;
 SELECT 
 	customer_id, 
 	sale_date AS day 
-FROM retail_sales 
+FROM saless 
 GROUP BY customer_id, day 
 HAVING COUNT(*) > 2 
 ORDER BY customer_id, day ;
@@ -168,7 +168,7 @@ ORDER BY customer_id, day ;
 SELECT
 	customer_id,
 	CONCAT("Week-",WEEK(sale_date), " of ", YEAR(sale_date)) AS order_date
-FROM retail_sales
+FROM saless
 GROUP BY customer_id, order_date
 HAVING COUNT(*) > 3
 ORDER BY customer_id;
@@ -177,7 +177,7 @@ ORDER BY customer_id;
 SELECT
 	customer_id,
 	DATE_FORMAT(sale_date,"%Y-%m") AS order_date
-FROM retail_sales
+FROM saless
 GROUP BY customer_id, order_date
 HAVING COUNT(customer_id) > 7
 ORDER BY customer_id, order_date;
@@ -186,25 +186,30 @@ ORDER BY customer_id, order_date;
 SELECT
 	customer_id,
 	DATE_FORMAT(sale_date, "%Y") AS order_date
-FROM retail_sales
+FROM saless
 GROUP BY customer_id, order_date
 HAVING COUNT(customer_id) > 70
 ORDER BY customer_id, order_date;
 
 /* ===== Generate Report that shows all key metrics of business ===== */
-SELECT "Total Sales" AS measure_name, SUM(total_sale) AS measure_value FROM retail_sales
+SELECT "Total Sales" AS measure_name, SUM(total_sale) AS measure_value FROM saless
 UNION ALL
-SELECT "Total Customer" AS measure_name, COUNT(DISTINCT(customer_id)) AS measure_value FROM retail_sales
+SELECT "Total Customer" AS measure_name, COUNT(DISTINCT(customer_id)) AS measure_value FROM saless
 UNION ALL
-SELECT "Total Category" AS measure_name, COUNT(DISTINCT(category)) AS measure_value FROM retail_sales
+SELECT "Total Category" AS measure_name, COUNT(DISTINCT(category)) AS measure_value FROM saless
 UNION ALL
-SELECT "Total Nr. Product Sold" AS measure_name, SUM(quantiy) AS measure_value FROM retail_sales
+SELECT "Total Nr. Product Sold" AS measure_name, SUM(quantity) AS measure_value FROM saless
 UNION ALL
-SELECT "Total Nr. Order" AS measure_name,	COUNT(transactions_id) AS measure_value FROM retail_sales;
+SELECT "Total Nr. Order" AS measure_name,	COUNT(transactions_id) AS measure_value FROM saless;
 
 
 
-
+SELECT 
+	category,
+    gender,
+    COUNT(DISTINCT(customer_id))
+from retail_sales
+group by category, gender;
 
 
 

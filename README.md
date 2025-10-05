@@ -1,5 +1,10 @@
 # 🛍️ Retail Sales Analysis (SQL Project)
 
+### 🔎 Dashboard Preview
+![Dashboard Preview](./assets/KPI_RETAIL_page-0001.jpg)
+
+![Dashboard Preview](./assets/KPI_RETAIL_page-0002.jpg)
+
 This project aims to analyze a **Retail Sales** dataset using SQL. The analysis is divided into two main parts: **Exploratory Data Analysis (EDA)** and **Advanced Data Analysis (ADA)**.  
 
 Dataset used: [`SQL - Retail Sales Analysis_utf.csv`](./datasets/SQL%20-%20Retail%20Sales%20Analysis_utf%20.csv)  

@@ -19,21 +19,21 @@ SELECT
 	SUM(total_sale - cogs) AS total_margin,
 	ROUND((SUM(total_sale - cogs)/NULLIF(SUM(total_sale),0)) * 100,2) AS margin_prcnt,
 	COUNT(transactions_id) AS total_transactions
-FROM retail_sales
+FROM saless
 GROUP BY category
 ORDER BY total_margin DESC;
-
+	
 /* ===== RFM Segmentation ===== */
 WITH rfm_base AS (
   SELECT customer_id,
          MAX(sale_date) AS last_purchase_date,
          COUNT(transactions_id) AS frequency,
          SUM(total_sale) AS monetary
-  FROM retail_sales
+  FROM saless
   GROUP BY customer_id
 ),
 snapshot AS (
-  SELECT MAX(sale_date) AS max_date FROM retail_sales
+  SELECT MAX(sale_date) AS max_date FROM saless
 ),
 rfm_calc AS (
   SELECT rb.customer_id,
@@ -90,7 +90,7 @@ WITH cohort AS (
     SELECT
         customer_id, 
         MIN(DATE_FORMAT(sale_date, '%Y-%m')) AS cohort_month
-    FROM retail_sales
+    FROM saless
     GROUP BY customer_id
 ),
 cohort_activity AS (
@@ -99,7 +99,7 @@ cohort_activity AS (
         DATE_FORMAT(s.sale_date, '%Y-%m') AS activity_month,
         COUNT(DISTINCT s.customer_id) AS active_customers
     FROM cohort c
-    JOIN retail_sales s
+    JOIN saless s
         ON c.customer_id = s.customer_id
     GROUP BY c.cohort_month, DATE_FORMAT(s.sale_date, '%Y-%m')
 ),
